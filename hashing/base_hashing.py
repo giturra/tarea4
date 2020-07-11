@@ -2,9 +2,16 @@ import numpy as np
 
 class BaseHash():
 
-    def __init__(self, size):
+    def __init__(self, size, hash_func=None):
         self._size = size
         self._hash_table = [None] * size
+        
+        if hash_func is not None:
+            # simple hash function
+            self.hash_func = lambda element: element % self._size
+
+        else:
+            self.hash_func = hash_func
 
         self.empty_value = 'NaN'
 
@@ -16,9 +23,6 @@ class BaseHash():
 
     def search(self, element):
         raise NotImplemented
-    
-    def hash_func(self, element):
-        return element % self._size
 
     def is_empty(self, idx, searching=False):
         if self._hash_table[idx] is None:
