@@ -2,21 +2,21 @@ from base_hashing import BaseHash
 
 class LinearHash(BaseHash):
     
-    def __init__(self, size=10):
-        super().__init__(size=size)
+    def __init__(self, size=10, hash_func=None):
+        super().__init__(size=size, hash_func=hash_func)
 
     def insert(self, element):
         idx = super().hash_func(element)
         i = 0
         
         while True:
-            insertion_index = (idx + i) % len(self)
+            insertion_index = super().hash_func(idx + i)
             if self.is_empty(insertion_index) or self.deleted(insertion_index):
-                self._hash_table[(idx + i) % len(self)] = element
+                self._hash_table[insertion_index] = element
                 break
             else:  
                 i += 1
-                insertion_index = (idx + i) % len(self)
+                insertion_index = super().hash_func(idx + i)
                 if insertion_index == idx:
                     # Table is full then double the size
                     # self._full()
@@ -27,7 +27,7 @@ class LinearHash(BaseHash):
         idx = super().hash_func(element)
         i = 0
         while True:
-            insertion_index = (idx + i) % len(self)
+            insertion_index = super().hash_func(idx + i)
             if self.is_empty(insertion_index):
                 # Empty space, element is not in table
                 return self
@@ -43,7 +43,7 @@ class LinearHash(BaseHash):
         idx = super().hash_func(element)
         i = 0
         while True:
-            insertion_index = (idx + i) % len(self)
+            insertion_index = super().hash_func(idx + i)
             if self.is_empty(insertion_index):
                 # Empty space, element is not in table
                 return False
