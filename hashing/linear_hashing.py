@@ -18,47 +18,47 @@ class LinearHash(BaseHash):
                 i += 1
                 insertion_index = (idx + i) % len(self)
                 if insertion_index == idx:
-                    print(self, 'is full!')
-                    return self
+                    # Table is full then double the size
                     # self._full()
+                    return self
         return self
     
     def delete(self, element):
         idx = super().hash_func(element)
         i = 0
-
         while True:
             insertion_index = (idx + i) % len(self)
-            
             if self.is_empty(insertion_index):
-                print(element, "not in", self)
+                # Empty space, element is not in table
                 return self
             elif self._hash_table[insertion_index] == element:
+                # Delete the value
                 self._hash_table[insertion_index] = self.empty_value
-                print(element, 'deleted at index', insertion_index)
             else:
+                # Keep looking
                 i += 1
                 continue
         
     def find(self, element):
         idx = super().hash_func(element)
         i = 0
-
         while True:
             insertion_index = (idx + i) % len(self)
-            
             if self.is_empty(insertion_index):
-                print(element, "not in", self)
+                # Empty space, element is not in table
                 return False
             elif self._hash_table[insertion_index] == element:
-                print(f'{element} is at index {insertion_index}', self)
+                # Element found at insertion_index
                 return True
             else:
+                # Keep looking
                 i += 1
                 continue
 
 
 if __name__ == "__main__":
+    # Simple tests
+    # Deberiamos formalizar
     hash = LinearHash(10)
     
     import numpy as np
