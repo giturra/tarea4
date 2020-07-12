@@ -1,22 +1,59 @@
 from base_hashing import BaseHash
+import numpy as np
 
-class LinearHash(BaseHash):
-    
-    def __init__(self, size=10):
-        super().__init__(size=size)
+class DoubleHash(BaseHash):
+
+    @staticmethod
+    def random_prime(n, seed=None):
+        """
+        Returns random prime lower than n
+        """
+        if seed is not None:
+            np.random.seed(seed)
+        
+        primes = [1] * (n + 1) 
+        p = 2
+        while p * p <= n : 
+            if (primes[p] == 1): 
+                for i in range(p * 2, n, p): 
+                    primes[i] = 0
+                    
+            p += 1
+        primes = np.array(primes[:-1]).nonzero()[0][2:]
+        return np.random.choice(primes)
+
+    def __init__(self, size=10, hash_func_1=None, hash_func_2=None, seed=None):
+        super().__init__(size=size, hash_func=hash_func_1)
+
+        self.seed = seed
+        
+        if hash_func_2 is None:
+            # simple hash function
+            # choose a prime lower than table size 
+            # https://www.geeksforgeeks.org/double-hashing/
+            # PRIME – (key % PRIME)
+            
+            self.prime = self.random_prime(len(self))
+            self.hash_func_2 = lambda element : self.prime - (element % self.prime)
+
+        else:
+            self.hash_func_2 = hash_func_2
 
     def insert(self, element):
-        idx = super().hash_func(element)
+        idx = self.hash_func(element)
         i = 0
-        
+
+        collision_index = i * self.hash_func_2(element)
+        insertion_index = idx + collision_index
         while True:
-            insertion_index = (idx + i) % len(self)
             if self.is_empty(insertion_index) or self.deleted(insertion_index):
-                self._hash_table[(idx + i) % len(self)] = element
+                self._hash_table[insertion_index] = element
                 break
             else:  
                 i += 1
-                insertion_index = (idx + i) % len(self)
+
+                collision_index = i * self.hash_func_2(element)
+                insertion_index = (idx + collision_index) % len(self)
                 if insertion_index == idx:
                     # Table is full then double the size
                     # self._full()
@@ -24,10 +61,12 @@ class LinearHash(BaseHash):
         return self
     
     def delete(self, element):
-        idx = super().hash_func(element)
+        idx = self.hash_func(element)
         i = 0
+        
+        collision_index = i * self.hash_func_2(element)
+        insertion_index = idx + collision_index
         while True:
-            insertion_index = (idx + i) % len(self)
             if self.is_empty(insertion_index):
                 # Empty space, element is not in table
                 return self
@@ -37,13 +76,23 @@ class LinearHash(BaseHash):
             else:
                 # Keep looking
                 i += 1
+
+                collision_index = i * self.hash_func_2(element)
+                insertion_index = (idx + collision_index) % len(self)
+                if insertion_index == idx:
+                    # Table is full then double the size
+                    # self._full()
+                    return self
+
                 continue
         
     def find(self, element):
-        idx = super().hash_func(element)
+        idx = self.hash_func(element)
         i = 0
+        
+        collision_index = i * self.hash_func_2(element)
+        insertion_index = idx + collision_index
         while True:
-            insertion_index = (idx + i) % len(self)
             if self.is_empty(insertion_index):
                 # Empty space, element is not in table
                 return False
@@ -53,15 +102,26 @@ class LinearHash(BaseHash):
             else:
                 # Keep looking
                 i += 1
+                
+                collision_index = i * self.hash_func_2(element)
+                insertion_index = (idx + collision_index) % len(self)
+                if insertion_index == idx:
+                    # Table is full then double the size
+                    # self._full()
+                    return self
+
                 continue
 
 
 if __name__ == "__main__":
     # Simple tests
     # Deberiamos formalizar
-    hash = LinearHash(10)
+
+    
+    hash = DoubleHash(10, seed=88)
     
     import numpy as np
+    
     
     threes = np.ones(3, dtype=int) * 3
     ones = np.ones(3, dtype=int) * 1
@@ -75,7 +135,8 @@ if __name__ == "__main__":
     hash.find(2)
     hash.delete(2)
 
-    print()
+    print('Tried to find and delete a 2\n')
+
 
     for i, three in enumerate(threes):
         hash.insert(three)
@@ -89,3 +150,4 @@ if __name__ == "__main__":
     
     hash.find(2)
     hash.delete(2)
+    print('Found and deleted a 2, result:', hash, '\n')
