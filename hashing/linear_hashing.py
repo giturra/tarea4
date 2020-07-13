@@ -2,8 +2,10 @@ from base_hashing import BaseHash
 
 class LinearHash(BaseHash):
     
-    def __init__(self, size=10, hash_func=None):
+    def __init__(self, size=10, hash_func=None, update_size=False):
         super().__init__(size=size, hash_func=hash_func)
+        
+        self.update_size = update_size
 
     def insert(self, element):
         idx = self.hash_func(element)
@@ -21,7 +23,8 @@ class LinearHash(BaseHash):
                 if insertion_index == idx:
                     # Table is full then double the size
                     print("Table is full")
-                    self._full()
+                    if self.update_size: 
+                        self._full()
                     return self
         return self
     
