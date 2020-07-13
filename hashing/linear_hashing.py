@@ -21,7 +21,7 @@ class LinearHash(BaseHash):
                 if insertion_index == idx:
                     # Table is full then double the size
                     print("Table is full")
-                    # self._full()
+                    self._full()
                     return self
         return self
     
