@@ -23,7 +23,7 @@ class DoubleHash(BaseHash):
         return np.random.choice(primes)
 
     def __init__(self, size=10, hash_func_1=None, hash_func_2=None, seed=None):
-        super().__init__(size=size, hash_func=hash_func_1)
+        super().__init__(size=size, hash_func=hash_func_1, hash_type='double')
 
         self.seed = seed
         

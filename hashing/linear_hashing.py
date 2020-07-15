@@ -4,7 +4,7 @@ from base_hashing import BaseHash
 class LinearHash(BaseHash):
 
     def __init__(self, size=10, hash_func=None, update_size=False):
-        super().__init__(size=size, hash_func=hash_func)
+        super().__init__(size=size, hash_func=hash_func, hash_type='linear')
 
         self.update_size = update_size
 
@@ -23,7 +23,7 @@ class LinearHash(BaseHash):
                 # print(insertion_index, idx)
                 if insertion_index == idx:
                     # Table is full then double the size
-                    print("Table is full")
+                    # print("Table is full")
                     if self.update_size:
                         self._full()
                     return self

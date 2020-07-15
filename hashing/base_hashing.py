@@ -1,12 +1,16 @@
 import numpy as np
+import time
 
 class BaseHash():
 
-    def __init__(self, size, hash_func=None):
+    def __init__(self, size, hash_func=None, hash_type=None):
         self._size = size
+        self._original_size = size
         self._hash_table = [None] * size
         
-        if hash_func is not None:
+        self._hash_type = hash_type
+
+        if hash_func is None:
             # simple hash function
             self.hash_func = lambda element: element % self._size
 
@@ -14,6 +18,10 @@ class BaseHash():
             self.hash_func = hash_func
 
         self.empty_value = 'NaN'
+
+        self._insert_times = None
+        self._total_insert_times = None
+
 
     def insert(self, element):
         raise NotImplemented
@@ -37,8 +45,8 @@ class BaseHash():
             return False
 
     def _full(self):
-        self.hash_table = self.hash_table + [None] * size
-        self.size += size
+        self._hash_table = self._hash_table + [None] * self._size
+        self._size += self._size
     
     def __add__(self, idx, element):
         """
@@ -57,4 +65,25 @@ class BaseHash():
     def __len__(self):
         return len(self._hash_table)
 
+    def run_experiment(self, list_to_insert):
+        insert_total = []
+        insert_times = []
+        
+        start_total = time.time()
+        
+        for element in list_to_insert:
+            start = time.time()
+            self.insert(element=element)
+            end = time.time()
+            insert_times.append(end - start)
+        
+        end_total = time.time()    
 
+        insert_total.append(end_total - start_total)
+
+        self._insert_times = insert_times
+        self._total_insert_times = insert_total
+        return self
+
+    def get_results(self):
+        return self._total_insert_times, self._insert_times, self._original_size, self._size
