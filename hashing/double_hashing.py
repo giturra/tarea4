@@ -22,11 +22,12 @@ class DoubleHash(BaseHash):
         primes = np.array(primes[:-1]).nonzero()[0][2:]
         return np.random.choice(primes)
 
-    def __init__(self, size=10, hash_func_1=None, hash_func_2=None, seed=None):
+    def __init__(self, size=10, hash_func_1=None, hash_func_2=None, seed=None, update_size=False):
         super().__init__(size=size, hash_func=hash_func_1, hash_type='double')
 
         self.seed = seed
-        
+        self.update_size = update_size
+
         if hash_func_2 is None:
             # simple hash function
             # choose a prime lower than table size 
@@ -57,6 +58,8 @@ class DoubleHash(BaseHash):
                 if insertion_index == idx:
                     # Table is full then double the size
                     # self._full()
+                    if self.update_size:
+                        self._full()
                     return self
         return self
     
