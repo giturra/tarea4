@@ -23,7 +23,7 @@ class BaseHash():
         self._total_insert_times = None
 
 
-    def insert(self, element):
+    def insert(self, element, return_comp=False):
         raise NotImplemented
     
     def delete(self, element):
@@ -66,22 +66,24 @@ class BaseHash():
         return len(self._hash_table)
 
     def run_experiment(self, list_to_insert):
-        counter = []
+        comparisons = []
         insert_total = []
         insert_times = []
         start_total = time.time()
         
         for element in list_to_insert:
             start = time.time()
-            counter.append(self.insert(element=element, return_comp = True))
+            comps = self.insert(element=element, return_comp=True)
             end = time.time()
             insert_times.append(end - start)
+            comparisons.append(comps)
         end_total = time.time()    
 
         insert_total.append(end_total - start_total)
         self._insert_times = insert_times
         self._total_insert_times = insert_total
-        self._comps = counter
+        self._comps = comparisons
+        # print(comparisons)
         return self
 
     def get_results(self):
