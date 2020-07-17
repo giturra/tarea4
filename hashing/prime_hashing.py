@@ -16,7 +16,7 @@ class PrimeHash(BaseHash):
         while True:
             calc_insert = self.is_empty(insertion_index) or self.deleted(insertion_index)
             counter += 1
-            if :
+            if calc_insert:
                 self._hash_table[insertion_index] = element
                 break
             else:
