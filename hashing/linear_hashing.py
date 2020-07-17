@@ -8,13 +8,15 @@ class LinearHash(BaseHash):
 
         self.update_size = update_size
 
-    def insert(self, element):
+    def insert(self, element, return_comp=False):
+        counter = 0
         idx = self.hash_func(element)
         i = 0
-
         insertion_index = idx + i
         while True:
-            if self.is_empty(insertion_index) or self.deleted(insertion_index):
+            calc_insert = self.is_empty(insertion_index) or self.deleted(insertion_index)
+            counter += 1 
+            if calc_insert:
                 self._hash_table[insertion_index] = element
                 break
             else:
@@ -26,7 +28,8 @@ class LinearHash(BaseHash):
                     # print("Table is full")
                     if self.update_size:
                         self._full()
-                    return self
+        if return_comp:
+            return counter                
         return self
 
     def delete(self, element):

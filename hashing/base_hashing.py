@@ -66,24 +66,23 @@ class BaseHash():
         return len(self._hash_table)
 
     def run_experiment(self, list_to_insert):
+        counter = []
         insert_total = []
         insert_times = []
-        
         start_total = time.time()
         
         for element in list_to_insert:
             start = time.time()
-            self.insert(element=element)
+            counter.append(self.insert(element=element, return_comp = True))
             end = time.time()
             insert_times.append(end - start)
-        
         end_total = time.time()    
 
         insert_total.append(end_total - start_total)
-
         self._insert_times = insert_times
         self._total_insert_times = insert_total
+        self._comps = counter
         return self
 
     def get_results(self):
-        return self._total_insert_times, self._insert_times, self._original_size, self._size
+        return self._total_insert_times, self._insert_times, self._original_size, self._size, self._comps

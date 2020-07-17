@@ -40,14 +40,17 @@ class DoubleHash(BaseHash):
         else:
             self.hash_func_2 = hash_func_2
 
-    def insert(self, element):
+    def insert(self, element, return_comp=False):
+        counter = 0
         idx = self.hash_func(element)
         i = 0
 
         collision_index = i * self.hash_func_2(element)
         insertion_index = idx + collision_index
         while True:
-            if self.is_empty(insertion_index) or self.deleted(insertion_index):
+            calc_insert = self.is_empty(insertion_index) or self.deleted(insertion_index)
+            counter += 1
+            if calc_insert:
                 self._hash_table[insertion_index] = element
                 break
             else:  
@@ -60,7 +63,8 @@ class DoubleHash(BaseHash):
                     # self._full()
                     if self.update_size:
                         self._full()
-                    return self
+        if return_comp:
+            return counter             
         return self
     
     def delete(self, element):
