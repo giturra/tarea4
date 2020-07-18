@@ -62,9 +62,8 @@ class DoubleHash(BaseHash):
                     # Table is full then double the size
                     # self._full()
                     if self.update_size:
-                        if return_comp:
-                            return counter 
-                        return self
+                        # self._full()
+                        break
         if return_comp:
             return counter             
         return self
