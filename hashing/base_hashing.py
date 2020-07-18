@@ -82,7 +82,7 @@ class BaseHash():
         insert_total.append(end_total - start_total)
         self._insert_times = insert_times
         self._total_insert_times = insert_total
-        self._comps = comparisons
+        self._comps = np.mean(comparisons)
         # print(comparisons)
         return self
 
