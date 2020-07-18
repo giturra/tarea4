@@ -28,6 +28,7 @@ class PrimeHash(BaseHash):
                     # print("Table is full")
                     if self.update_size:
                         self._full()
+                        break
         if return_comp:
             return counter
         return self

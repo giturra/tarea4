@@ -63,6 +63,7 @@ class DoubleHash(BaseHash):
                     # self._full()
                     if self.update_size:
                         self._full()
+                        return self
         if return_comp:
             return counter             
         return self
