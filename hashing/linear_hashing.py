@@ -27,8 +27,11 @@ class LinearHash(BaseHash):
                     # Table is full then double the size
                     # print("Table is full", self._size, counter)
                     if self.update_size:
+                        if return_comp:
+                            return counter 
                         return self
-                        break
+                        
+                        # return self
         if return_comp:
             return counter                
         return self
