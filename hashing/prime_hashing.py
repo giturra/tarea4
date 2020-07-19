@@ -25,11 +25,10 @@ class PrimeHash(BaseHash):
                 # print(insertion_index, idx)
                 if insertion_index == idx:
                     # Table is full then double the size
-                    # print("Table is full")
-                    if self.update_size:
-                        # self._full()
-                        break
-            return counter
+                    self._full()
+                    break
+        if return_comp:
+            return counter                
         return self
 
     def find(self, element):
